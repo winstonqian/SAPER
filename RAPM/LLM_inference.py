@@ -24,9 +24,9 @@ def extract_words(text):
 
 def evaluation(lines, labels, meta_labels):
     
-    tokenizer = AutoTokenizer.from_pretrained("facebook/galactica-1.3b", use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct", use_fast=False)
     if tokenizer.pad_token is None:
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+        tokenizer.pad_token_id = tokenizer.eos_token_id
     labels = [l.strip() for l in labels]
     lines = [line.strip() for line in lines]
     
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     all_labels = []
     all_meta_labels = []
 
-    for i in tqdm(range(len(dic))):
+    for i in tqdm(range(infer_numbers)):
         d = dic[i]
         RAG_prompt = d['RAG_prompt']
         answer = d['labels']
