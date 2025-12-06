@@ -1,0 +1,143 @@
+Task: protein_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 23.94966456861971
+BLEU-4 score: 16.77918386430659
+Meta-BLEU-2 score: 56.982173510843616
+Meta-BLEU-4 score: 47.47506805286092
+Average Meteor score: 56.09060733982181
+ROUGE score:
+rouge1: 39.5439595961659
+rouge2: 18.905678021707832
+rougeL: 30.148433168430884
+Exact Match: 0.0
+
+Task: protein_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 23.660719590699365
+BLEU-4 score: 16.56307830354479
+Meta-BLEU-2 score: 57.05310418500592
+Meta-BLEU-4 score: 47.4159972081108
+Average Meteor score: 55.161390779144995
+ROUGE score:
+rouge1: 39.15357723355819
+rouge2: 18.657454207930385
+rougeL: 29.600395733062022
+Exact Match: 0.0
+
+Task: protein_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 24.252236740219267
+BLEU-4 score: 16.954492679120627
+Meta-BLEU-2 score: 55.95162433529587
+Meta-BLEU-4 score: 46.55442680893164
+Average Meteor score: 54.19781199754539
+ROUGE score:
+rouge1: 39.38886109678197
+rouge2: 18.99733528536805
+rougeL: 30.40124305963034
+Exact Match: 0.0
+
+Task: general_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 19.137696368445432
+BLEU-4 score: 12.506675033348536
+Meta-BLEU-2 score: 9.824750933867872
+Meta-BLEU-4 score: 7.176296747572068
+Average Meteor score: 30.623495181436432
+ROUGE score:
+rouge1: 28.922583142626273
+rouge2: 11.742426428140233
+rougeL: 21.642013188119442
+Exact Match: 0.0
+
+Task: general_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 19.279174149967346
+BLEU-4 score: 12.551145142683456
+Meta-BLEU-2 score: 9.540161397552422
+Meta-BLEU-4 score: 6.99687953919867
+Average Meteor score: 30.5374654176447
+ROUGE score:
+rouge1: 28.79877899157429
+rouge2: 11.776032082270502
+rougeL: 21.654837362899627
+Exact Match: 0.0
+
+Task: general_function_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 17.41933824591698
+BLEU-4 score: 10.638053734474362
+Meta-BLEU-2 score: 8.270633479535414
+Meta-BLEU-4 score: 5.734547301747714
+Average Meteor score: 28.487273318321936
+ROUGE score:
+rouge1: 27.302277281104274
+rouge2: 9.791900168790036
+rougeL: 19.85442426713318
+Exact Match: 0.0
+
+Task: domain_motif_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 14.641896796210474
+BLEU-4 score: 9.935241812447206
+Meta-BLEU-2 score: 32.44825573064591
+Meta-BLEU-4 score: 25.465530086953837
+Average Meteor score: 40.0119001528485
+ROUGE score:
+rouge1: 28.366851465464237
+rouge2: 15.03603705241675
+rougeL: 24.33259276311087
+Exact Match: 0.0
+
+Task: domain_motif_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 14.165113170572848
+BLEU-4 score: 9.580859649476679
+Meta-BLEU-2 score: 36.19625365265555
+Meta-BLEU-4 score: 28.784567419256447
+Average Meteor score: 39.731839650655076
+ROUGE score:
+rouge1: 27.946214588934517
+rouge2: 14.807492656487145
+rougeL: 24.186343989170574
+Exact Match: 0.0
+
+Task: domain_motif_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 14.532576656894841
+BLEU-4 score: 10.042488374437191
+Meta-BLEU-2 score: 34.6343597523535
+Meta-BLEU-4 score: 27.586986072157956
+Average Meteor score: 41.4803247644307
+ROUGE score:
+rouge1: 27.142478788206237
+rouge2: 14.654779474149166
+rougeL: 23.45945626783463
+Exact Match: 0.0
+
+Task: catalytic_activity_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 22.42453042068063
+BLEU-4 score: 16.47329119684254
+Meta-BLEU-2 score: 43.639095951353724
+Meta-BLEU-4 score: 36.61191831195509
+Average Meteor score: 46.13959730816284
+ROUGE score:
+rouge1: 37.852387282564486
+rouge2: 19.408365427511654
+rougeL: 33.555204341371656
+Exact Match: 0.0
+
+Task: catalytic_activity_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 22.67679696172881
+BLEU-4 score: 16.49943880668918
+Meta-BLEU-2 score: 42.80676200167006
+Meta-BLEU-4 score: 35.31710949560358
+Average Meteor score: 45.97829605523124
+ROUGE score:
+rouge1: 37.635958608648615
+rouge2: 19.169690473930412
+rougeL: 33.57246937083275
+Exact Match: 0.0
+
+Task: catalytic_activity_OOD, Top-K: 10, Alpha: 0.7, Model: gemini-2.5-flash
+BLEU-2 score: 22.298625973865775
+BLEU-4 score: 16.440078617717603
+Meta-BLEU-2 score: 42.667647425938284
+Meta-BLEU-4 score: 35.47287012377254
+Average Meteor score: 45.285245170992866
+ROUGE score:
+rouge1: 37.3097480039351
+rouge2: 19.774192446213583
+rougeL: 33.22237152705013
+Exact Match: 0.0
