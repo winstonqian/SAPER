@@ -182,6 +182,10 @@ dataset/protein_function_OOD.json
 # features
 retrival_methods/features/
 
+# Report Files
+report/
+report.zip
+
 # Generated Feature Files
 *.npy
 features/
@@ -196,3 +200,7 @@ all_results.txt
 
 # System Files
 .DS_Store
+
+# Miscellaneous
+*.fasta
+*.m8
