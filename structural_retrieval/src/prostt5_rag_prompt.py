@@ -67,9 +67,10 @@ def RAG_prompt_construction(db_seqs, db_labels, db_prostt5_features, db_esm2_fea
         esm2_index.add(db_esm2_norm.astype(np.float32))
         esm2_index.hnsw.efSearch = max(50, topk * 2)
 
-    # Load test features
-    test_prostt5 = np.load(os.path.join(output_dir, f"hybrid_{task_name}_test_prostt5.npy"))
-    test_esm2 = np.load(os.path.join(output_dir, f"hybrid_{task_name}_test_esm2.npy"))
+    # Load test features from parent directory (structural_retrieval/)
+    parent_dir = os.path.dirname(output_dir) if output_dir.endswith('/src') else output_dir
+    test_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_test_prostt5.npy"))
+    test_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_test_esm2.npy"))
 
     # Normalize features
     test_prostt5_norm = test_prostt5 / np.linalg.norm(test_prostt5, axis=1, keepdims=True)
@@ -113,7 +114,7 @@ def RAG_prompt_construction(db_seqs, db_labels, db_prostt5_features, db_esm2_fea
         rrf_results.append(rrf_topk)
 
     # Build Faiss index on current task's training set for examples
-    train_prostt5 = np.load(os.path.join(output_dir, f"hybrid_{task_name}_train_prostt5.npy"))
+    train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_train_prostt5.npy"))
     train_prostt5_norm = train_prostt5 / np.linalg.norm(train_prostt5, axis=1, keepdims=True)
     train_faiss_index = faiss.IndexHNSWFlat(train_prostt5_norm.shape[1], 32)
     train_faiss_index.hnsw.efSearch = max(50, topk * 2)
@@ -167,7 +168,7 @@ def RAG_prompt_construction(db_seqs, db_labels, db_prostt5_features, db_esm2_fea
         }
         output_json.append(rag_prompt)
 
-    output_path = os.path.join(output_dir, f"HYBRID_RRF_{task_name}_RAP_Top_{topk}.json")
+    output_path = os.path.join(parent_dir, f"HYBRID_RRF_{task_name}_RAP_Top_{topk}.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output_json, f, ensure_ascii=False, indent=2)
 
@@ -182,8 +183,9 @@ if __name__ == "__main__":
     dataset_path = sys.argv[1]
     top_k = int(sys.argv[2])
 
-    # Get script directory for output
+    # Get script directory and parent directory for output
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
 
     all_train_seqs = []
     all_train_labels = []
@@ -192,7 +194,7 @@ if __name__ == "__main__":
 
     print("="*80)
     print("Hybrid RRF RAG Prompt Construction")
-    print(f"Output directory: {script_dir}")
+    print(f"Output directory: {parent_dir}")
     print("="*80)
 
     # Collect all training data across tasks
@@ -205,10 +207,10 @@ if __name__ == "__main__":
         JSON_PATH = os.path.join(dataset_path, p)
         dic = json.load(open(JSON_PATH, "r"))
 
-        # Load ProstT5 and ESM-2 features
+        # Load ProstT5 and ESM-2 features from parent directory
         try:
-            now_train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_train_prostt5.npy"))
-            now_train_esm2 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_train_esm2.npy"))
+            now_train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_train_prostt5.npy"))
+            now_train_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_train_esm2.npy"))
         except FileNotFoundError:
             print(f"Hybrid feature files for {now_task} not found!")
             print(f"Please run prostt5_retrieval.py first to generate hybrid features.")
@@ -283,7 +285,7 @@ if __name__ == "__main__":
                                topk=top_k,
                                prostt5_index=None,
                                esm2_index=None,
-                               output_dir=script_dir)
+                               output_dir=parent_dir)
 
     print(f"\n{'='*60}")
     print("RAG prompt construction complete!")

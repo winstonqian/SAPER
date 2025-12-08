@@ -21,9 +21,12 @@ import re
 from mmseq_utils import align_and_analyze
 from prostt5_features import hybrid_rrf_predict, rrf_predict
 
-# Store results in structural_retrieval/
+# Store results in structural_retrieval/results/
 script_dir = os.path.dirname(os.path.abspath(__file__))
-result_file = open(os.path.join(script_dir, "hybrid_rrf_results.txt"), "w")
+parent_dir = os.path.dirname(script_dir)
+results_dir = os.path.join(parent_dir, "results")
+os.makedirs(results_dir, exist_ok=True)
+result_file = open(os.path.join(results_dir, "hybrid_rrf_results.txt"), "w")
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
@@ -150,7 +153,7 @@ def evaluation(lines, labels, meta_labels, task_name):
 
 if __name__ == "__main__":
 
-    JSON_FOLDER = "../dataset"
+    JSON_FOLDER = "../../dataset"
 
     all_train_seqs = []
     all_train_labels = []
@@ -232,10 +235,10 @@ if __name__ == "__main__":
         evaluation(pred_labels, test_labels, meta_list, f"{p[:-5]}_mmseqs")
 
         # Load features for combined evaluation later
-        train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{p[:-5]}_train_prostt5.npy"))
-        train_esm2 = np.load(os.path.join(script_dir, f"hybrid_{p[:-5]}_train_esm2.npy"))
-        test_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{p[:-5]}_test_prostt5.npy"))
-        test_esm2 = np.load(os.path.join(script_dir, f"hybrid_{p[:-5]}_test_esm2.npy"))
+        train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{p[:-5]}_train_prostt5.npy"))
+        train_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{p[:-5]}_train_esm2.npy"))
+        test_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{p[:-5]}_test_prostt5.npy"))
+        test_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{p[:-5]}_test_esm2.npy"))
 
         all_train_features.append((train_prostt5, train_esm2))
         all_test_features.append((test_prostt5, test_esm2))
@@ -296,7 +299,7 @@ if __name__ == "__main__":
 
     print(f"\n{'='*60}")
     print("Evaluation Complete!")
-    print(f"Results saved to: {os.path.join(script_dir, 'hybrid_rrf_results.txt')}")
+    print(f"Results saved to: {os.path.join(results_dir, 'hybrid_rrf_results.txt')}")
     print(f"{'='*60}")
 
     result_file.close()

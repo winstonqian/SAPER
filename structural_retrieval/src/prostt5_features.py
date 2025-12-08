@@ -148,7 +148,8 @@ def extract_features(dataset, split_name, feature_dir=None, extract_both=True):
     if feature_dir is None:
         # Default to structural_retrieval/features/
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        feature_dir = os.path.join(script_dir, "features")
+        parent_dir = os.path.dirname(script_dir)
+        feature_dir = os.path.join(parent_dir, "features")
     os.makedirs(feature_dir, exist_ok=True)
 
     prostt5_features = []
@@ -540,11 +541,11 @@ def hybrid_rrf_predict(train_seqs, test_seqs, train_labels, test_labels, task_na
     test_esm2 = None
 
     if reuse_esm2:
-        esm2_train_path = os.path.join(parent_dir, "features", f"{task_name}_train_features.npy")
-        esm2_test_path = os.path.join(parent_dir, "features", f"{task_name}_test_features.npy")
+        esm2_train_path = os.path.join(parent_dir, "..", "features", f"{task_name}_train_features.npy")
+        esm2_test_path = os.path.join(parent_dir, "..", "features", f"{task_name}_test_features.npy")
 
         if os.path.exists(esm2_train_path) and os.path.exists(esm2_test_path):
-            print(f"✓ Reusing existing ESM-2 features from {parent_dir}/features/")
+            print(f"✓ Reusing existing ESM-2 features from project root features/")
             train_esm2 = np.load(esm2_train_path)
             test_esm2 = np.load(esm2_test_path)
             print(f"  Loaded ESM-2 train: {train_esm2.shape}, test: {test_esm2.shape}")
@@ -555,7 +556,7 @@ def hybrid_rrf_predict(train_seqs, test_seqs, train_labels, test_labels, task_na
     train_set = [{"seq": seq, "label": label} for seq, label in zip(train_seqs, train_labels)]
     test_set = [{"seq": seq, "label": label} for seq, label in zip(test_seqs, test_labels)]
 
-    feature_dir = os.path.join(script_dir, "features", f"hybrid_{task_name}")
+    feature_dir = os.path.join(parent_dir, "features", f"hybrid_{task_name}")
     os.makedirs(feature_dir, exist_ok=True)
 
     if train_esm2 is None or test_esm2 is None:
@@ -570,10 +571,10 @@ def hybrid_rrf_predict(train_seqs, test_seqs, train_labels, test_labels, task_na
         test_prostt5, test_labels = extract_features(test_set, "test", feature_dir, extract_both=False)
 
     # Save features for later use in structural_retrieval/
-    np.save(os.path.join(script_dir, f"hybrid_{task_name}_train_prostt5.npy"), train_prostt5)
-    np.save(os.path.join(script_dir, f"hybrid_{task_name}_train_esm2.npy"), train_esm2)
-    np.save(os.path.join(script_dir, f"hybrid_{task_name}_test_prostt5.npy"), test_prostt5)
-    np.save(os.path.join(script_dir, f"hybrid_{task_name}_test_esm2.npy"), test_esm2)
+    np.save(os.path.join(parent_dir, f"hybrid_{task_name}_train_prostt5.npy"), train_prostt5)
+    np.save(os.path.join(parent_dir, f"hybrid_{task_name}_train_esm2.npy"), train_esm2)
+    np.save(os.path.join(parent_dir, f"hybrid_{task_name}_test_prostt5.npy"), test_prostt5)
+    np.save(os.path.join(parent_dir, f"hybrid_{task_name}_test_esm2.npy"), test_esm2)
 
     # Predict using RRF
     print(f"Performing RRF prediction (top_k={top_k})...")

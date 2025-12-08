@@ -243,14 +243,17 @@ if __name__ == "__main__":
     # Default to Gemini 2.5 Flash (best cost-performance)
     model = sys.argv[3] if len(sys.argv) > 3 else "gemini-2.5-flash"
 
-    # Get script directory for input/output
+    # Get script directory and parent directory for input/output
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+    results_dir = os.path.join(parent_dir, "results")
+    os.makedirs(results_dir, exist_ok=True)
 
-    result_file = open(os.path.join(script_dir, "hybrid_rrf_rapm_256_results.txt"), "a+")
+    result_file = open(os.path.join(results_dir, "hybrid_rrf_rapm_256_results.txt"), "a+")
     all_input_prompt_len = 0
 
     # Load prompts to determine how many samples to evaluate
-    JSON_PATH = os.path.join(script_dir, f"HYBRID_RRF_{now_task}_RAP_Top_{now_k}.json")
+    JSON_PATH = os.path.join(parent_dir, f"HYBRID_RRF_{now_task}_RAP_Top_{now_k}.json")
 
     if not os.path.exists(JSON_PATH):
         print(f"Error: Prompt file {JSON_PATH} not found!")
@@ -263,11 +266,11 @@ if __name__ == "__main__":
     print("="*80)
     print(f"Hybrid RRF RAPM Evaluation")
     print(f"Task: {now_task}, Top-K: {now_k}, Model: {model}")
-    print(f"Output directory: {script_dir}")
+    print(f"Output directory: {parent_dir}")
     print("="*80)
     print("Task:", now_task, "Top-K:", now_k, "Model:", model, file=result_file)
 
-    JSON_PATH = os.path.join(script_dir, f"HYBRID_RRF_{now_task}_RAP_Top_{now_k}.json")
+    JSON_PATH = os.path.join(parent_dir, f"HYBRID_RRF_{now_task}_RAP_Top_{now_k}.json")
 
     if not os.path.exists(JSON_PATH):
         print(f"Error: Prompt file {JSON_PATH} not found!")
@@ -301,7 +304,7 @@ if __name__ == "__main__":
 
     # Save detailed results
     print(f"\nSaving detailed results...")
-    results_path = os.path.join(script_dir, f"HYBRID_RRF_{now_task}_{now_k}_results.json")
+    results_path = os.path.join(results_dir, f"HYBRID_RRF_{now_task}_{now_k}_results.json")
 
     for i in range(len(all_answers)):
         info_dict = {
@@ -318,7 +321,7 @@ if __name__ == "__main__":
     print("="*80)
     print("Evaluation complete!")
     print(f"Results saved to: {results_path}")
-    print(f"Metrics saved to: {os.path.join(script_dir, 'prostt5_rapm_results.txt')}")
+    print(f"Metrics saved to: {os.path.join(results_dir, 'hybrid_rrf_rapm_256_results.txt')}")
     print("="*80)
 
     result_file.close()

@@ -225,7 +225,20 @@ if __name__ == "__main__":
             task_name=task_name
         )
     
-    # print(f"\n ESM feature retrieval for all_task ...", file=result_file)
-    # pred_labels, test_labels, acc = peer_knn_predict(all_train_seqs, all_test_seqs, all_train_labels, all_test_labels, "all")
-    
-    
+    print(f"\n ESM feature retrieval for all_task ...", file=result_file)
+    # Use pre-computed concatenated features
+    from feature_sim import knn_predict
+    all_pred_labels_esm = knn_predict(all_train_features, all_train_labels, all_test_features, k=1)
+
+    # Evaluate ESM2 on combined all_task, split by subtasks
+    for (start, end), task_name in zip(task_ranges, task_names):
+        task_name += "_all_esm"
+        print(f"\nEvaluation for task: {task_name}", file=result_file)
+        evaluation(
+            all_pred_labels_esm[start:end],
+            all_test_labels[start:end],
+            meta_labels=all_meta_list[start:end],
+            task_name=task_name
+        )
+
+

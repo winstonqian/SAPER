@@ -387,6 +387,9 @@ if __name__ == "__main__":
     model = sys.argv[4] if len(sys.argv) > 4 else "gemini-2.5-flash"
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+    results_dir = os.path.join(parent_dir, "results")
+    os.makedirs(results_dir, exist_ok=True)
     # Dataset path relative to script directory
     dataset_path = os.path.join(os.path.dirname(script_dir), "dataset")
 
@@ -394,7 +397,7 @@ if __name__ == "__main__":
     distance_conversion = 'inverse'
     score_normalization = 'minmax'
 
-    result_file = open(os.path.join(script_dir, f"hybrid_weighted_sim_alpha{alpha:.2f}_256_rapm_results.txt"), "a+")
+    result_file = open(os.path.join(results_dir, f"hybrid_weighted_sim_alpha{alpha:.2f}_256_rapm_results.txt"), "a+")
     all_input_prompt_len = 0
 
     print("="*80)
@@ -402,7 +405,7 @@ if __name__ == "__main__":
     print(f"Task: {now_task}, Top-K: {now_k}, Alpha: {alpha}, Model: {model}")
     print(f"Distance conversion: {distance_conversion}")
     print(f"Score normalization: {score_normalization}")
-    print(f"Output directory: {script_dir}")
+    print(f"Output directory: {parent_dir}")
     print("="*80)
     print(f"Task: {now_task}, Top-K: {now_k}, Alpha: {alpha}, Model: {model}", file=result_file)
 
@@ -423,8 +426,8 @@ if __name__ == "__main__":
         dic = json.load(open(JSON_PATH, "r"))
 
         try:
-            task_train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{task}_train_prostt5.npy"))
-            task_train_esm2 = np.load(os.path.join(script_dir, f"hybrid_{task}_train_esm2.npy"))
+            task_train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task}_train_prostt5.npy"))
+            task_train_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{task}_train_esm2.npy"))
         except FileNotFoundError:
             print(f"Warning: Features for {task} not found, skipping...")
             continue
@@ -501,8 +504,8 @@ if __name__ == "__main__":
     train_labels = [d["description"] for d in dic if d['split'] == 'train']
 
     # Load test features
-    test_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_test_prostt5.npy"))
-    test_esm2 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_test_esm2.npy"))
+    test_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_test_prostt5.npy"))
+    test_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_test_esm2.npy"))
 
     # Normalize test features
     test_prostt5_norm = test_prostt5 / np.linalg.norm(test_prostt5, axis=1, keepdims=True)
@@ -529,7 +532,7 @@ if __name__ == "__main__":
 
     # ===== Build FAISS Index for In-Task Examples =====
 
-    train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_train_prostt5.npy"))
+    train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_train_prostt5.npy"))
     train_prostt5_norm = train_prostt5 / np.linalg.norm(train_prostt5, axis=1, keepdims=True)
     train_faiss_index = faiss.IndexHNSWFlat(train_prostt5_norm.shape[1], 32)
     train_faiss_index.hnsw.efSearch = max(50, now_k * 2)
@@ -592,7 +595,7 @@ if __name__ == "__main__":
 
     # Save detailed results
     print(f"\n=== Saving detailed results ===")
-    results_path = os.path.join(script_dir, f"WEIGHTED_SIM_alpha{alpha:.2f}_{now_task}_{now_k}_results.json")
+    results_path = os.path.join(results_dir, f"WEIGHTED_SIM_alpha{alpha:.2f}_{now_task}_{now_k}_results.json")
 
     with open(results_path, 'w') as f:
         for i in range(len(all_answers)):
@@ -609,7 +612,7 @@ if __name__ == "__main__":
     print("="*80)
     print("Evaluation complete!")
     print(f"Results saved to: {results_path}")
-    print(f"Metrics saved to: {os.path.join(script_dir, f'hybrid_weighted_sim_alpha{alpha:.2f}_256_rapm_results.txt')}")
+    print(f"Metrics saved to: {os.path.join(results_dir, f'hybrid_weighted_sim_alpha{alpha:.2f}_256_rapm_results.txt')}")
     print("="*80)
 
     result_file.close()

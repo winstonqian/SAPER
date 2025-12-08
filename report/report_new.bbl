@@ -1,0 +1,67 @@
+\begin{thebibliography}{1}
+
+\bibitem{uniprot2023}
+{The UniProt Consortium}.
+\newblock Uniprot: the universal protein knowledgebase in 2023.
+\newblock {\em Nucleic Acids Research}, 51(D1):D523--D531, 2023.
+
+\bibitem{radivojac2013}
+Predrag Radivojac, Wyatt~T Clark, Tal~Ronnen Oron, Alexandra~M Schnoes, Tobias
+  Wittkop, Artem Sokolov, Kiley Graim, Christopher Funk, Karin Verspoor, Asa
+  Ben-Hur, et~al.
+\newblock A large-scale evaluation of computational protein function
+  prediction.
+\newblock {\em Nature Methods}, 10(3):221--227, 2013.
+
+\bibitem{wu2025rethinking}
+Juntong Wu, Zijing Liu, He~Cao, Hao Li, Bin Feng, Zishan Shu, Ke~Yu, Li~Yuan,
+  and Yu~Li.
+\newblock Rethinking text-based protein understanding: Retrieval or llm?, 2025.
+\newblock arXiv preprint arXiv:2505.20354.
+
+\bibitem{lin2023evolutionary}
+Zeming Lin, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita
+  Smetanin, Robert Verkuil, Ori Kabeli, Yaniv Shmueli, Allan dos Santos~Costa,
+  Maryam Fazel-Zarandi, Tom Sercu, Salvatore Candido, and Alexander Rives.
+\newblock Evolutionary-scale prediction of atomic-level protein structure with
+  a language model.
+\newblock {\em Science}, 379(6637):1123--1130, 2023.
+
+\bibitem{anfinsen1973}
+Christian~B Anfinsen.
+\newblock Principles that govern the folding of protein chains.
+\newblock {\em Science}, 181(4096):223--230, 1973.
+\newblock Nobel Prize Lecture.
+
+\bibitem{heinzinger2023prostt5}
+Michael Heinzinger, Konstantin Weissenow, Joaquin~Gomez Sanchez, Adrian Henkel,
+  Martin Mirdita, Martin Steinegger, and Burkhard Rost.
+\newblock Prostt5: Bilingual language model for protein sequence and structure.
+\newblock {\em bioRxiv}, 2023.
+\newblock Preprint available at bioRxiv.
+
+\bibitem{vanKempen2024foldseek}
+Michel van Kempen, Stephanie~S Kim, Charlotte Tumescheit, Martin Mirdita,
+  Jeongjae Lee, Cameron~LM Gilchrist, Johannes S{\"o}ding, and Martin
+  Steinegger.
+\newblock Fast and accurate protein structure search with foldseek.
+\newblock {\em Nature Biotechnology}, 42(2):243--246, 2024.
+\newblock 3Di structural alphabet for Foldseek.
+
+\bibitem{cormack2009reciprocal}
+Gordon~V Cormack, Charles~LA Clarke, and Stefan Buettcher.
+\newblock Reciprocal rank fusion outperforms condorcet and individual rank
+  learning methods.
+\newblock In {\em Proceedings of the 32nd International ACM SIGIR Conference on
+  Research and Development in Information Retrieval}, pages 758--759. ACM,
+  2009.
+
+\bibitem{banerjee2005meteor}
+Satanjeev Banerjee and Alon Lavie.
+\newblock Meteor: An automatic metric for mt evaluation with improved
+  correlation with human judgments.
+\newblock In {\em Proceedings of the ACL Workshop on Intrinsic and Extrinsic
+  Evaluation Measures for Machine Translation and/or Summarization}, pages
+  65--72. Association for Computational Linguistics, 2005.
+
+\end{thebibliography}

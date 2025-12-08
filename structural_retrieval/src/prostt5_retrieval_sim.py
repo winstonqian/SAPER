@@ -23,8 +23,11 @@ import faiss
 
 from mmseq_utils import align_and_analyze
 
-# Store results in structural_retrieval/
+# Store results in structural_retrieval/results/
 script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+results_dir = os.path.join(parent_dir, "results")
+os.makedirs(results_dir, exist_ok=True)
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
@@ -351,13 +354,14 @@ def hybrid_weighted_sim_predict(train_seqs, test_seqs, train_labels, test_labels
         acc: Accuracy
     """
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
 
     # Load pre-computed hybrid features
     print(f"Loading hybrid features for {task_name}...")
-    train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{task_name}_train_prostt5.npy"))
-    train_esm2 = np.load(os.path.join(script_dir, f"hybrid_{task_name}_train_esm2.npy"))
-    test_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{task_name}_test_prostt5.npy"))
-    test_esm2 = np.load(os.path.join(script_dir, f"hybrid_{task_name}_test_esm2.npy"))
+    train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_train_prostt5.npy"))
+    train_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_train_esm2.npy"))
+    test_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_test_prostt5.npy"))
+    test_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{task_name}_test_esm2.npy"))
 
     print(f"  Train: ProstT5 {train_prostt5.shape}, ESM-2 {train_esm2.shape}")
     print(f"  Test: ProstT5 {test_prostt5.shape}, ESM-2 {test_esm2.shape}")
@@ -401,9 +405,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    JSON_FOLDER = "../dataset"
+    JSON_FOLDER = "../../dataset"
 
-    result_file = open(os.path.join(script_dir,
+    result_file = open(os.path.join(results_dir,
                                      f"hybrid_weighted_sim_alpha{args.alpha:.2f}_results.txt"), "w")
 
     print("="*80)
@@ -456,7 +460,7 @@ if __name__ == "__main__":
 
     print(f"\n{'='*60}")
     print("Evaluation Complete!")
-    print(f"Results saved to: {os.path.join(script_dir, f'hybrid_weighted_sim_alpha{args.alpha:.2f}_results.txt')}")
+    print(f"Results saved to: {os.path.join(results_dir, f'hybrid_weighted_sim_alpha{args.alpha:.2f}_results.txt')}")
     print(f"{'='*60}")
 
     result_file.close()

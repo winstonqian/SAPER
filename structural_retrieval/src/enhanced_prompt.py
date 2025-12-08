@@ -140,7 +140,7 @@ def get_task_specific_instructions(task_name):
 - Use EC number terminology when applicable (e.g., "hydrolase", "transferase", "oxidoreductase")
 """,
         "domain_motif": """
-**Task-Specific Guidance for Domain/Motif Prediction**:
+**Task-Specific Guidance for Domain Motif Prediction**:
 - Identify SPECIFIC DOMAINS by name (e.g., "SH3 domain", "zinc finger", "WD40 repeat")
 - Describe STRUCTURAL MOTIFS (e.g., "helix-turn-helix", "beta-barrel", "leucine zipper")
 - Mention BINDING SITES (e.g., "DNA-binding domain", "ATP-binding motif", "protein-protein interaction domain")
@@ -338,18 +338,21 @@ if __name__ == "__main__":
     model = sys.argv[4] if len(sys.argv) > 4 else "gemini-2.5-flash"
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+    results_dir = os.path.join(parent_dir, "results")
+    os.makedirs(results_dir, exist_ok=True)
     dataset_path = os.path.join(os.path.dirname(script_dir), "dataset")
 
     # Configuration
     distance_conversion = 'inverse'
     score_normalization = 'minmax'
 
-    result_file = open(os.path.join(script_dir, f"enhanced_prompt_alpha{alpha:.2f}_rapm_results.txt"), "a+")
+    result_file = open(os.path.join(results_dir, f"enhanced_prompt_alpha{alpha:.2f}_rapm_results.txt"), "a+")
 
     print("="*80)
     print(f"Enhanced RAPM with Terminology-Focused Prompting")
     print(f"Task: {now_task}, Top-K: {now_k}, Alpha: {alpha}, Model: {model}")
-    print(f"Output directory: {script_dir}")
+    print(f"Output directory: {parent_dir}")
     print("="*80)
     print(f"Task: {now_task}, Top-K: {now_k}, Alpha: {alpha}, Model: {model}", file=result_file)
 
@@ -370,8 +373,8 @@ if __name__ == "__main__":
         dic = json.load(open(JSON_PATH, "r"))
 
         try:
-            task_train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{task}_train_prostt5.npy"))
-            task_train_esm2 = np.load(os.path.join(script_dir, f"hybrid_{task}_train_esm2.npy"))
+            task_train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{task}_train_prostt5.npy"))
+            task_train_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{task}_train_esm2.npy"))
         except FileNotFoundError:
             print(f"Warning: Features for {task} not found, skipping...")
             continue
@@ -444,8 +447,8 @@ if __name__ == "__main__":
 
     train_labels = [d["description"] for d in dic if d['split'] == 'train']
 
-    test_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_test_prostt5.npy"))
-    test_esm2 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_test_esm2.npy"))
+    test_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_test_prostt5.npy"))
+    test_esm2 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_test_esm2.npy"))
 
     test_prostt5_norm = test_prostt5 / np.linalg.norm(test_prostt5, axis=1, keepdims=True)
     test_esm2_norm = test_esm2 / np.linalg.norm(test_esm2, axis=1, keepdims=True)
@@ -456,7 +459,7 @@ if __name__ == "__main__":
     infer_numbers = 256
     # ===== Build In-Task FAISS Index =====
 
-    train_prostt5 = np.load(os.path.join(script_dir, f"hybrid_{now_task}_train_prostt5.npy"))
+    train_prostt5 = np.load(os.path.join(parent_dir, f"hybrid_{now_task}_train_prostt5.npy"))
     train_prostt5_norm = train_prostt5 / np.linalg.norm(train_prostt5, axis=1, keepdims=True)
     train_faiss_index = faiss.IndexHNSWFlat(train_prostt5_norm.shape[1], 32)
     train_faiss_index.hnsw.efSearch = max(50, now_k * 2)
@@ -557,7 +560,7 @@ Do not include explanations, justifications, or any other text. Only the JSON an
 
     # Save detailed results
     print(f"\n=== Saving detailed results ===")
-    results_path = os.path.join(script_dir, f"ENHANCED_PROMPT_alpha{alpha:.2f}_{now_task}_{now_k}_results.json")
+    results_path = os.path.join(results_dir, f"ENHANCED_PROMPT_alpha{alpha:.2f}_{now_task}_{now_k}_results.json")
 
     with open(results_path, 'w') as f:
         for i in range(len(all_answers)):
@@ -574,7 +577,7 @@ Do not include explanations, justifications, or any other text. Only the JSON an
     print("="*80)
     print("Evaluation complete!")
     print(f"Results saved to: {results_path}")
-    print(f"Metrics saved to: {os.path.join(script_dir, f'enhanced_prompt_alpha{alpha:.2f}_rapm_results.txt')}")
+    print(f"Metrics saved to: {os.path.join(results_dir, f'enhanced_prompt_alpha{alpha:.2f}_rapm_results.txt')}")
     print("="*80)
 
     result_file.close()
