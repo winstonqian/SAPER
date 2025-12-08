@@ -204,3 +204,4 @@ all_results.txt
 # Miscellaneous
 *.fasta
 *.m8
+tmp/
