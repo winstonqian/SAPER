@@ -241,23 +241,78 @@ Score(protein_i) = α × cosine_sim_ProstT5(i) + (1-α) × cosine_sim_ESM2(i)
 
 ### 3. Enhanced Prompt Engineering
 
-**Key improvements over standard prompts:**
-- Structured instruction formatting with clear task specification
-- Contextual integration of retrieved protein annotations
-- Optimized confidence level presentation
-- Better few-shot example formatting for Gemini 2.5
+SAPER significantly extends the baseline RAPM prompt construction ($\mathcal{P} = \mathcal{Q} \oplus \mathcal{E}_{\text{few-shot}} \oplus \mathcal{R}_{1:K}$) through five key innovations:
 
-Example structure:
+#### Baseline RAPM Approach
+The original RAPM uses a generic concatenation structure:
+- System: "You are given a protein sequence and a list of related proteins..."
+- Retrieved evidence: Flat Python dict format with confidence labels (High/Medium/Low based on >90%, 60-90%, <60% similarity)
+- Training examples: Cross-task demonstrations with confidence levels
+- Output constraint: JSON format `{"description": "..."}`
+
+**Limitations:**
+- No task-specific guidance (all tasks use same prompt)
+- Flat list presentation (hard to parse visually)
+- Generic instructions (no terminology emphasis)
+- Cross-task examples (inconsistent vocabulary)
+
+#### SAPER Enhanced Approach
+
+**(1) Expert Persona Framing**
 ```
-You are given a protein sequence and a list of related proteins retrieved from a database.
-Instruction: [Task-specific instruction]
-Protein sequence: [Target sequence]
-Retrieved proteins annotations by [Method]: [Top-K similar proteins with confidence]
-Here are some example input-output pairs for this task:
-[Few-shot examples from training set]
-Based on the instruction, the protein sequence, the retrieved information, and the examples,
-output ONLY the functional description of this protein in JSON format.
+You are a protein function prediction expert with deep knowledge of biological terminology.
 ```
+Activates LLM's domain-specific knowledge vs. generic user framing.
+
+**(2) Task-Specific Guidance**
+Dynamic instructions injected per task:
+- **Catalytic Activity**: "Focus on SPECIFIC catalytic mechanisms (e.g., acid-base catalysis), identify ENZYME CLASS (e.g., serine protease), specify SUBSTRATE and COFACTOR requirements"
+- **Domain Motif**: "Identify SPECIFIC DOMAINS by name (e.g., SH3 domain, zinc finger), use InterPro/Pfam terminology"
+- **Protein Function**: "Use MOLECULAR FUNCTION terms from Gene Ontology (GO:MF), specify BIOLOGICAL PROCESSES"
+- **General Function**: "Provide BROAD FUNCTIONAL CATEGORIES, mention CELLULAR LOCATION, describe BIOLOGICAL ROLE"
+
+**(3) Confidence-Level Grouping**
+```
+🟢 **High Confidence Matches (score ≥ 0.9)**:
+  • Catalyzes the reversible phosphorylation of ATP and creatine
+  • Belongs to the phosphagen kinase family
+
+🟡 **Medium Confidence Matches (0.7 ≤ score < 0.9)**:
+  • Contains conserved phosphagen kinase domain
+
+🔴 **Lower Confidence Matches (score < 0.7)**:
+  • May be involved in cellular energy homeostasis
+```
+Visual stratification with emoji indicators (🟢🟡🔴) replaces flat dict format.
+
+**(4) Explicit Terminology Directives**
+```
+**IMPORTANT INSTRUCTIONS**:
+1. **Use PRECISE biological terminology** from the retrieved annotations
+2. **Prioritize high-confidence matches** - they are most similar
+3. **Extract domain-specific terms** (enzyme names, GO terms, motifs, etc.)
+4. **Avoid generic descriptions** - be specific
+5. **Match the terminology style** of the training examples
+```
+Direct guidance for entity extraction (critical for Meta-BLEU).
+
+**(5) In-Task Example Selection**
+```
+**In-Task Training Examples** (for format reference):
+  • Catalyzes the transfer of phosphate from phosphocreatine to ADP
+  • ATP-dependent kinase activity with creatine substrate specificity
+```
+Task-specific top-3 examples ensure vocabulary consistency with ground truth.
+
+#### Impact on Meta-BLEU
+
+These enhancements improve Meta-BLEU by:
+1. **Task guidance** → Increases terminology precision (aligns with evaluation vocabulary)
+2. **Confidence grouping** → Prioritizes high-quality structural matches
+3. **Terminology directives** → Promotes entity extraction and copying from high-confidence matches
+4. **In-task examples** → Ensures terminology style matches ground truth
+
+**Results**: +6 to +9 Meta-BLEU-2 points on top of structural retrieval improvements (see detailed comparison in `report/comparison.md`).
 
 ### 4. Evaluation Metrics
 
@@ -480,6 +535,17 @@ where `p_n` are n-gram precisions computed on extracted entities.
 ---
 
 ## Detailed Analysis
+
+### Comprehensive Prompt Engineering Comparison
+
+For a detailed side-by-side comparison of baseline RAPM vs. SAPER's enhanced prompting approach, including:
+- Full prompt structure examples
+- Line-by-line code comparisons
+- Task-specific guidance for all 4 tasks
+- Impact analysis on Meta-BLEU scores
+- Ablation study of each component
+
+See the comprehensive analysis in **[report/comparison.md](report/comparison.md)**.
 
 ### Why ProstT5 Improves Performance
 

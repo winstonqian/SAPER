@@ -112,7 +112,7 @@ def compute_std_devs(results):
 
 
 def create_comparison_plot(baseline_results, hybrid_rrf_results, hybrid_weighted_results,
-                          metric='METEOR', output_path='performance_comparison.png'):
+                          metric='METEOR', output_path='../figs/performance_comparison.png'):
     """
     Create a bar plot with error bars comparing the three methods across datasets.
 
@@ -159,7 +159,7 @@ def create_comparison_plot(baseline_results, hybrid_rrf_results, hybrid_weighted
     bars1 = ax.bar(x - width, baseline_means, width, label='Baseline (No Structural)',
                    color=color_baseline, alpha=0.7, yerr=baseline_stds,
                    capsize=5, error_kw={'linewidth': 2, 'elinewidth': 2})
-    bars2 = ax.bar(x, rrf_means, width, label='Hybrid RRF (Structural)',
+    bars2 = ax.bar(x, rrf_means, width, label='Hybrid RRF (k=60, Structural)',
                    color=color_rrf, alpha=0.7, yerr=rrf_stds,
                    capsize=5, error_kw={'linewidth': 2, 'elinewidth': 2})
     bars3 = ax.bar(x + width, weighted_means, width,
@@ -202,7 +202,7 @@ def create_comparison_plot(baseline_results, hybrid_rrf_results, hybrid_weighted
 
 def create_multi_metric_comparison(baseline_results, hybrid_rrf_results, hybrid_weighted_results,
                                    metrics=['METEOR', 'BLEU-4', 'ROUGE-L'],
-                                   output_path='multi_metric_comparison.png'):
+                                   output_path='../figs/multi_metric_comparison.png'):
     """
     Create a faceted bar plot with error bars comparing multiple metrics across datasets.
     """
@@ -351,7 +351,7 @@ def main():
     hybrid_weighted_avg = compute_averages(hybrid_weighted_results)
 
     # Create output directory
-    output_dir = Path(__file__).parent
+    output_dir = Path(__file__).parent.parent / 'figs'
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Generate visualizations

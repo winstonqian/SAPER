@@ -6,8 +6,8 @@ domain_motif_OOD, catalytic_activity_OOD).
 
 Compares three methods:
 1. Baseline (no structural embeddings) - RED
-2. Hybrid Weighted Similarity (alpha=0.7, with structural embeddings) - GREEN
-3. Enhanced Prompt (alpha=0.7, with structural embeddings) - YELLOW
+2. Hybrid RRF (alpha=0.7, with structural embeddings) - BLUE 
+3. Enhanced RRF (alpha=0.7, with structural embeddings) - PURPLE
 
 Results are averaged over 3 independent runs of 256 samples each.
 """
@@ -120,10 +120,10 @@ def create_comparison_plot(baseline_results, hybrid_weighted_results, enhanced_p
         'catalytic_activity_OOD': 'Catalytic Activity'
     }
 
-    # Standard colors: red, green, yellow
+    # Standard colors: red, blue, purple
     color_baseline = 'red'
-    color_weighted = 'green'
-    color_enhanced = 'gold'
+    color_weighted = 'blue'
+    color_enhanced = 'purple'
 
     # Extract means and standard deviations
     baseline_means = [np.mean(baseline_results[task][metric]) for task in tasks]
@@ -144,11 +144,11 @@ def create_comparison_plot(baseline_results, hybrid_weighted_results, enhanced_p
     bars1 = ax.bar(x - width, baseline_means, width, label='Baseline (No Structural)',
                    color=color_baseline, alpha=0.7, yerr=baseline_stds,
                    capsize=5, error_kw={'linewidth': 2, 'elinewidth': 2})
-    bars2 = ax.bar(x, weighted_means, width, label='Hybrid Weighted (α=0.7, Structural)',
+    bars2 = ax.bar(x, weighted_means, width, label='Hybrid RRF (k=60, Structural)',
                    color=color_weighted, alpha=0.7, yerr=weighted_stds,
                    capsize=5, error_kw={'linewidth': 2, 'elinewidth': 2})
     bars3 = ax.bar(x + width, enhanced_means, width,
-                   label='Enhanced Prompt (α=0.7, Structural)',
+                   label='Enhanced RRF (k=60, Structural)',
                    color=color_enhanced, alpha=0.7, yerr=enhanced_stds,
                    capsize=5, error_kw={'linewidth': 2, 'elinewidth': 2})
 
@@ -167,7 +167,7 @@ def create_comparison_plot(baseline_results, hybrid_weighted_results, enhanced_p
     # Customize plot
     ax.set_xlabel('Dataset', fontsize=12, fontweight='bold')
     ax.set_ylabel(f'{metric} Score', fontsize=12, fontweight='bold')
-    ax.set_title(f'Performance Comparison: Prompt Enhancement for Hybrid Weighted Similarity\n({metric} Score, Averaged over 3 runs of 256 samples)',
+    ax.set_title(f'Performance Comparison: Prompt Enhancement Improvement for Hybrid RRF\n({metric} Score, Averaged over 3 runs of 256 samples)',
                  fontsize=14, fontweight='bold', pad=20)
     ax.set_xticks(x)
     ax.set_xticklabels([task_labels[t] for t in tasks])
@@ -203,8 +203,8 @@ def create_multi_metric_comparison(baseline_results, hybrid_weighted_results, en
 
     # Standard colors
     color_baseline = 'red'
-    color_weighted = 'green'
-    color_enhanced = 'gold'
+    color_weighted = 'blue'
+    color_enhanced = 'purple'
 
     fig, axes = plt.subplots(1, len(metrics), figsize=(16, 5))
 
@@ -227,11 +227,11 @@ def create_multi_metric_comparison(baseline_results, hybrid_weighted_results, en
         bars1 = ax.bar(x - width, baseline_means, width, label='Baseline',
                       color=color_baseline, alpha=0.7, yerr=baseline_stds,
                       capsize=4, error_kw={'linewidth': 1.5, 'elinewidth': 1.5})
-        bars2 = ax.bar(x, weighted_means, width, label='Hybrid Weighted',
+        bars2 = ax.bar(x, weighted_means, width, label='Hybrid RRF',
                       color=color_weighted, alpha=0.7, yerr=weighted_stds,
                       capsize=4, error_kw={'linewidth': 1.5, 'elinewidth': 1.5})
         bars3 = ax.bar(x + width, enhanced_means, width,
-                      label='Enhanced Prompt', color=color_enhanced, alpha=0.7,
+                      label='Enhanced RRF', color=color_enhanced, alpha=0.7,
                       yerr=enhanced_stds,
                       capsize=4, error_kw={'linewidth': 1.5, 'elinewidth': 1.5})
 
@@ -319,8 +319,8 @@ def main():
     project_root = Path(__file__).parent.parent.parent
 
     baseline_file = project_root / 'gemini_evaluation_256_results.txt'
-    hybrid_weighted_file = project_root / 'structural_retrieval/results/hybrid_weighted_sim_alpha0.70_256_rapm_results.txt'
-    enhanced_prompt_file = project_root / 'structural_retrieval/results/enhanced_prompt_alpha0.70_rapm_results.txt'
+    hybrid_weighted_file = project_root / 'structural_retrieval/results/hybrid_rrf_rapm_256_results.txt'
+    enhanced_prompt_file = project_root / 'structural_retrieval/results/enhanced_rrf_results.txt'
 
     # Parse results
     print("Parsing baseline results...")
@@ -346,21 +346,21 @@ def main():
     create_comparison_plot(
         baseline_results, hybrid_weighted_results, enhanced_prompt_results,
         metric='Meta-BLEU-2',
-        output_path=output_dir / 'prompt_meta_bleu2_comparison.png'
+        output_path=output_dir / 'prompt_rrf_meta_bleu2_comparison.png'
     )
 
     # Single metric comparison (Meta-BLEU-4)
     create_comparison_plot(
         baseline_results, hybrid_weighted_results, enhanced_prompt_results,
         metric='Meta-BLEU-4',
-        output_path=output_dir / 'prompt_meta_bleu4_comparison.png'
+        output_path=output_dir / 'prompt_rrf_meta_bleu4_comparison.png'
     )
 
     # Multi-metric comparison (Meta-BLEU-2 and Meta-BLEU-4)
     create_multi_metric_comparison(
         baseline_results, hybrid_weighted_results, enhanced_prompt_results,
         metrics=['Meta-BLEU-2', 'Meta-BLEU-4'],
-        output_path=output_dir / 'prompt_meta_bleu_comparison.png'
+        output_path=output_dir / 'prompt_rrf_meta_bleu_comparison.png'
     )
 
     # Print summary tables
