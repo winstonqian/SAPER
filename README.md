@@ -5,8 +5,6 @@
 
 <h4 align="center">
 
-**Achieving +114% Meta-BLEU Improvement on Domain Motif Identification through Structural Embeddings and Enhanced Prompting**
-
 *Extended work based on "Rethinking Protein Understanding: Retrieval-Augmented Modeling Reconsidered"*
 
 </h4>
@@ -302,5 +300,6 @@ If you use SAPER in your research, please cite:
 ## Contact
 
 - **Code Repository**: [github.com/winstonqian/SAPER](https://github.com/winstonqian/SAPER)
+- For questions about the original RAPM paper, refer to the [original repository](https://github.com/IDEA-XL/RAPM).
 
 For questions or collaboration, please open an issue on GitHub.
