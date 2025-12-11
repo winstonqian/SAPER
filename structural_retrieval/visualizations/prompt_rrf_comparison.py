@@ -97,7 +97,7 @@ def compute_averages(results):
 
 
 def create_comparison_plot(baseline_results, hybrid_weighted_results, enhanced_prompt_results,
-                          metric='METEOR', output_path='../figs/performance_comparison.png'):
+                          metric='METEOR', output_path='../../report/figs/performance_comparison.png'):
     """
     Create a bar plot with error bars comparing the three methods across datasets.
 
@@ -187,7 +187,7 @@ def create_comparison_plot(baseline_results, hybrid_weighted_results, enhanced_p
 
 def create_multi_metric_comparison(baseline_results, hybrid_weighted_results, enhanced_prompt_results,
                                    metrics=['Meta-BLEU-2', 'Meta-BLEU-4'],
-                                   output_path='../figs/multi_metric_comparison.png'):
+                                   output_path='../../report/figs/multi_metric_comparison.png'):
     """
     Create a faceted bar plot with error bars comparing multiple metrics across datasets.
     """
@@ -336,7 +336,7 @@ def main():
     enhanced_prompt_avg = compute_averages(enhanced_prompt_results)
 
     # Create output directory
-    output_dir = Path(__file__).parent.parent / 'figs'
+    output_dir = Path(__file__).parent.parent.parent / 'report/figs'
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Generate visualizations
